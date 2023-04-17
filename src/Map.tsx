@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Layout, Cascader, Button, Space, Divider, List } from 'antd';
 import data from './adcode.json';
-const { Header, Footer, Sider, Content } = Layout;
+const { Content } = Layout;
 
 interface Adcode {
   parent: string | null;
@@ -61,14 +61,14 @@ function random_select(a: string[][]) {
   const get_name = (adcode: string) => {
     let name = `${adcodes[adcode].name} (${adcode})`
     let parent = adcodes[adcode].parent
-    while (parent != null && parent != '100000') {
+    while (parent !== null && parent !== '100000') {
       name = adcodes[parent].name + " - " + name
       parent = adcodes[parent].parent
     }
     return name
   }
   const add_adcode = (adcode: string) => {
-    if (adcode == '100000') {
+    if (adcode === '100000') {
       for (let sub_adcode of adcodes[adcode].children) {
         add_adcode(sub_adcode)
       }
@@ -82,7 +82,7 @@ function random_select(a: string[][]) {
       ret.push(get_name(adcode))
     }
     // 省
-    else if (adcode.slice(2, 6) == '0000') {
+    else if (adcode.slice(2, 6) === '0000') {
       for (let sub_adcode of adcodes[adcode].children) {
         add_adcode(sub_adcode)
       }
@@ -102,7 +102,7 @@ function random_select(a: string[][]) {
 
 const App: React.FC = () => {
   const [results, setResults] = useState<string[]>([]);
-  const [selected, setSelected] = useState<string[][]>([]);
+  const [selected, setSelected] = useState<string[][]>([['100000']]);
 
   const onChange = (value: string[][]) => {
     setSelected(value)
@@ -121,6 +121,7 @@ const App: React.FC = () => {
           options={ad_options}
           // @ts-ignore
           onChange={onChange}
+          value={selected}
           multiple
           maxTagCount="responsive"
         />
